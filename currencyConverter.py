@@ -9,8 +9,8 @@ def errormessage():
 	print("Kown Codes:")
 	for key in conversions:
 		print(key)
-	exit()	
-
+	exit()
+gnome	
 conversions = {"USD": 	1.0,
 			   "FRANC": 1.2,
 			   "RUP": 	2.0,
@@ -30,6 +30,6 @@ if len(arguments) != 4 or arguments[2] not in conversions or arguments[3] not in
 	errormessage()
 
 ammount = arguments[1]
-froom = arguments[2]
+from_ = arguments[2]
 to = arguments[3]
-print(float(ammount) * (conversions[froom]/conversions[to]))
+print(str((float(ammount) * (conversions[from_]/conversions[to])).format)

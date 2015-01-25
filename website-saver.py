@@ -6,29 +6,31 @@
 import sys
 import urllib.request
 
-def getFile(url):
+def get_file(url):
     """Takes url, downloads file"""
-    if checkURL(url) == False:
+    if not valid_url(url):
         print("Not a valid url!")
         return
     response = urllib.request.urlopen(url)
     print("Got file!")
     html = response.read()
-    filename = getFileName(url)
-    saveFile(str(html), "website-saver-" + filename)
+    filename = get_file_name(url)
+    save_file(str(html), "website-saver-" + filename)
 
-def getFileName(url):
+def get_file_name(url):
     return url.split("/")[-1]
-    
-def checkURL(url):
+
+def valid_url(url):
     """Sees if url looks like a valid url. Full disclosure: really stupid
        function, I'm just writing it for the experience."""
-    if url[:8] == "https://" or url[:7] == "http://":
+    if (url[:8] == "https://" or url[:7] == "http://" or
+        url[-4:] == ".htm" or url[-5:] == ".html" or
+        url[-4:] == ".php" or url[-1] != "/"): # so terrible
         return True
     else:
         return False
 
-def saveFile(data, filename):
+def save_file(data, filename):
     """File saver helper function"""
     f = open(filename, "w")
     f.write(data)
@@ -38,6 +40,10 @@ if __name__ == "__main__":
     """Why did the ckicekn cross the road?
        To see if she was on __main__ street! :D"""
     args = sys.argv
+    if len(args) < 2:
+        print("You forgot a URL!\nProper usage: python3 website-saver.py [URL]")
+        exit()
     url = args[1] # hopefully a url...
-    getFile(url)
+    get_file(url)
     print("Finished program!?")
+    
