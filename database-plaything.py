@@ -7,6 +7,8 @@ import os.path
 
 DATABASE_NAME = "people-to-kill.db"
 PROMPT = ">>> "
+CONNECTION = None
+CURSOR = None
 
 def valid_age(age):
     """checks if age (string) is int and above > 0"""
@@ -30,38 +32,31 @@ def database_exists(dbname):
 
 def create_database(dbname):
     """create database"""
-    conn = sqlite3.connect(DATABASE_NAME)
-    c = conn.cursor()
-    c.execute("""CREATE TABLE people
+    global CONNECTION
+    global CURSOR
+    CONNECTION = sqlite3.connect(DATABASE_NAME)
+    CURSOR = CONNECTION.cursor()
+    CURSOR.execute("""CREATE TABLE people
                  (name text, age integer)""")
-    conn.commit()
-    conn.close()
-
-def get_cursor_conn():
-    """Returns cursor and connection. Probably a terrible function."""
-    conn = sqlite3.connect(DATABASE_NAME)
-    c = conn.cursor()
-    return c, conn
-
-def commit(conn):
-    """Jesus, please forgive me."""
-    conn.commit()
-    conn.close()
+    CONNECTION.commit()
 
 def insert_data(name, age):
     """opens database, puts shit into it, commits and closes"""
-    c, conn = get_cursor_conn()
-    c.execute("""INSERT INTO people VALUES
+    CURSOR.execute("""INSERT INTO people VALUES
                  (?, ?)""", (name, int(age)))
-    commit(conn)
+    CONNECTION.commit()
 
 def view_data():
     """Prints the database contents."""
-    c, conn = get_cursor_conn()
     table = []
-    for row in c.execute("SELECT * FROM people ORDER BY name"):
+    for row in CURSOR.execute("SELECT * FROM people ORDER BY name"):
         table.append(row)
-    print(table)
+    table.sort()
+    print("Contents of " + DATABASE_NAME + ":")
+    print("NAME | AGE")
+    for entry in table:
+        print("{} | {}".format(entry[0], entry[1]))
+
 
 def take_input():
     """Gets name and age."""
@@ -74,11 +69,17 @@ def take_input():
         age = user_input = input(PROMPT)
     if user_input != "exit":
         insert_data(name, age)
+        print("'{},' age {}, inserted into database.".format(name, age)) 
 
 def main():
     """Sets up some shit and does the main loop."""
     if not database_exists(DATABASE_NAME):
         create_database(DATABASE_NAME)
+    else:
+        global CONNECTION
+        global CURSOR
+        CONNECTION = sqlite3.connect(DATABASE_NAME)
+        CURSOR = CONNECTION.cursor()
     print("""Hello! Type "view" to view your database, or "insert" """)
     print("""to add a name and age. Type "exit" at any point to quit.""")
     user_input = ""
@@ -90,7 +91,6 @@ def main():
             view_data()
         else:
             if user_input != "exit":
-                print(user_input)
                 print("ERROR CODE ID-10-t; please contact system administrator.")
     print("Have a nice day!")
 
