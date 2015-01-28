@@ -1,5 +1,13 @@
+/**
+ * @author     Crispin Stichart
+ * @version    0.01
+ * @since      2015-01-27
+ */
+
 class fizzbuzz {
-    
+/**
+ * Hey, at least it compiles.
+ */
     public static void print(String thing) {
         System.out.println(thing);
     }
@@ -21,7 +29,3 @@ class fizzbuzz {
 
     }
 }
-
-// adjlsad
-// jksdlsad
-// klhasd
