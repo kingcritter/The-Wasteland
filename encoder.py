@@ -4,10 +4,10 @@
 def encode(string):
     """Takes a string and returns the Base64 representation."""
     binary = convert_to_binary(string)
-    # Figures out how much padding the string needs, if any  
+    # Figures out how much padding the string needs, if any
     if len(user_input) % 3 != 0:
-        if len(user_input)+1 % 3 == 0:
-            binary = binary << 8
+        if (len(user_input)+1) % 3 == 0:
+            binary = binary << 2
             padding = 1
         else: 
             binary = binary << 4
