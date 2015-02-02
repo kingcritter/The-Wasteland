@@ -13,7 +13,6 @@ def encode(string):
             binary = binary << 4
             padding = 2
     else: padding = 0
-    print("Binary after", len(bin(binary))-1)
     # The leadingzero part is because convert_to_binary() can return
     # an odd number if the first character is a number, because 
     # ord() of any digit is a 7 bit integer. 
@@ -46,12 +45,7 @@ def convert_to_binary(string):
        then returns that number."""
     binary = 0
     for letter in string:
-        # okay, so what's going on here is that some characters oridinal values
-        # are less than 8 bits. So this makes sure they're padded correctly. 
-        code = ord(letter)
-        bitnumber = len(bin(code))-1 # bin() returns string with "b" in it
-        print("bitnumber", bitnumber)
-        binary = code + (binary << (8))
+        binary = ord(letter) + (binary << 8)
     return binary
 
 if __name__ == "__main__":
