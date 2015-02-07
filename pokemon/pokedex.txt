@@ -1,0 +1,11 @@
+name : pikachu
+type : lightning
+info : freaky little mouse
+
+name: rattata
+type: normal
+info: holy shit a rat
+
+name: pidgy
+type: normal flying
+info : it's like bird, but... different?
