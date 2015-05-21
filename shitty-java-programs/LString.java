@@ -1,6 +1,8 @@
 // LinkedList implementation of a StringBuilder-like class
 // in progress
 
+import java.lang.Math;
+
 public class LString {
     class Node {
         char data;
@@ -39,41 +41,47 @@ public class LString {
     }
 
     public int compareTo(LString otherLString) {
-        // todo: lexographic ordering
-        return 0;
+        if (this.equals(otherLString))
+            return 0; 
+        Node curr = first;
+        Node currOther = otherLString.first;
+        while (curr != null && currOther != null) {
+            if (curr.data != currOther.data) //if characters are different...
+                return curr.data - currOther.data; //return distance between chars 
+            curr = curr.next;
+            currOther = currOther.next;
+        } // if there's no difference found befoe running out of characters:
+        return this.length - otherLString.length(); // returns difference in lengths
     }
 
+
+
     @Override public boolean equals(Object other) {
-        if ((other == null) || (other instanceof LString)) {
+        if ((other == null) || !(other instanceof LString))
             return false;
-        }
-        else {
-            LString otherLString = (LString)other;
-            if (this.length != otherLString.length)
+        LString otherLString = (LString)other;
+        if (this.length != otherLString.length)
+            return false;
+        Node curr = first;
+        Node otherCurr = otherLString.first;
+        while (curr != null) {
+            if (curr.data != otherCurr.data)
                 return false;
-            Node curr = first;
-            Node otherCurr = otherLString.first;
-            while (curr != null) {
-                if (curr.data != otherCurr.data)
-                    return false;
-                curr = curr.next;
-                otherCurr = otherCurr.next;
-            }
-            return true;
+            curr = curr.next;
+            otherCurr = otherCurr.next;
         }
+        return true;
     }
 
     public char charAt(int i) {
         if ((i > length-1) || (i < 0)) {
             throw new IndexOutOfBoundsException("" + i);
         }
-        else {
-            Node curr = first;
-            for (int x=0; x < i; x++) {
-                curr = curr.next;
-            }
-            return curr.data;
+        Node curr = first;
+        for (int x=0; x < i; x++) {
+            curr = curr.next;
         }
+        return curr.data;
     }
 
     public void setCharAt(int i, char ch) {
@@ -102,7 +110,10 @@ public class LString {
         return newList;
     }
 
+    // todo: Replace of empty LString is not working
     public LString replace(int start, int end, LString newSub) {
+        if (newSub.length == 0)
+            return this;
         int count = 0;
         int subCount = 0;
         LString newList = new LString();
@@ -123,9 +134,6 @@ public class LString {
         return newList;
     }
 
-            
-
-
     // used for the constructor; could be made public, but it's
     // not in the assignment, so...
     private void append(char data) {
@@ -138,6 +146,7 @@ public class LString {
             last = last.next;
         }
         length++;
+
     }
 
     }
