@@ -112,8 +112,21 @@ public class LString {
 
     // todo: Replace of empty LString is not working
     public LString replace(int start, int end, LString newSub) {
+        if ((start > end) || (start < 0) || (end < 0) || (end > this.length))
+            throw new IndexOutOfBoundsException("Start: " + start + " End: " + end);
+        if (newSub.length == 0 && this.length == 0)
+            return new LString();
         if (newSub.length == 0)
             return this;
+        if (this.length == 0) {
+            LString newList = new LString();
+            for (Node curr = newSub.first; curr != null; curr = curr.next) {
+                System.out.println(curr.data);
+                newList.append(curr.data);
+            }
+            this.first = newList.first;
+            return this;
+        }
         int count = 0;
         int subCount = 0;
         LString newList = new LString();
