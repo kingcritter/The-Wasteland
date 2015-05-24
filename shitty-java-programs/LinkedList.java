@@ -1,3 +1,24 @@
+/*
+A doubly linked list class. It's not an implementation of a stack or queue, 
+so no pop or shift methods. No method will both alter the current list and 
+return something. Methods named like "[operation]Inline" alter the current 
+list and have a coresponding "[operation]" method that just returns a copy.
+
+I tried to name things logically. 
+
+Public methods:
+void length()
+void append()
+void prepend()
+LinkedList<E> remove(int i)
+void removeInline(int i)
+E getAt(int i)
+LinkedList<E> copy()
+LinkedList<E> subsection(int start, int end)
+LinkedList<E> replace(int start, int end, LinkedList<E> substitute)
+LinkedList<E> replaceInline(int start, int end, LinkedList<E> substitute)
+*/
+
 public class LinkedList<E> {
     class Node {
         E data;
@@ -63,8 +84,20 @@ public class LinkedList<E> {
     // removes the element at index i, modifying the list
     public void removeInline(int i) {
         Node temp = getNodeAt(i);
-        temp.prev.next = temp.next;
-        temp.next.prev = temp.prev;
+        if (i == 0) {
+            first = temp.next;
+            first.prev = null;
+        }
+        else {
+            temp.prev.next = temp.next; 
+        }           
+        if (i == length-1) {
+            last = last.prev;
+            last.next = null;
+        }
+        else {
+            temp.next.prev = temp.prev;
+        }
         length--;
     }
 
@@ -75,7 +108,6 @@ public class LinkedList<E> {
         newList.removeInline(i);
         return newList;
     }
-
 
     // retruns the data at index i
     public E getAt(int i) {
@@ -94,7 +126,7 @@ public class LinkedList<E> {
     }
 
     // returns a new list that hold the same data
-    private LinkedList<E> copy(LinkedList<E> list) {
+    public LinkedList<E> copy(LinkedList<E> list) {
         LinkedList<E> newList = new LinkedList<E>(); 
         for (Node curr = list.first; curr != null; curr = curr.next) {
             newList.append(curr.data);
@@ -103,7 +135,7 @@ public class LinkedList<E> {
     }
 
     // returns a new list that's a subsection of this one
-    public LinkedList<E> substring(int start, int end) {
+    public LinkedList<E> subsection(int start, int end) {
         if ((start > end) || (start < 0) || (end < 0) || (end > this.length))
             throw new IndexOutOfBoundsException("Start: " + start + " End: " + end);
         Node curr = getNodeAt(start);
@@ -115,23 +147,19 @@ public class LinkedList<E> {
         return newList;
     }
 
-    public void replaceInline() {
-    } 
-    // replaces a subsection of the list, returns the new version
-    public LinkedList<E> replace(int start, int end, LinkedList<E> substitute) {
+    // replaces a subsection of this list, modifying it 
+    public void replaceInline(int start, int end, LinkedList<E> substitute) {
         // checks to see if start and end are okay
         if ((start > end) || (start < 0) || (end < 0) || (end > this.length))
             throw new IndexOutOfBoundsException("Start: " + start + " End: " + end);
-        // create new list that's a copy of this one
-        LinkedList<E> newList = copy(this);
         // set length
-        newList.length = this.length + substitute.length - (end-start);
+        this.length = this.length + substitute.length - (end-start);
         // copy substitute data to new LinkedList 
         LinkedList<E> tempList = copy(substitute);
         // assign new node to start at:
         Node specialFront = new Node();
-        specialFront.next = newList.first;
-        newList.first = specialFront;
+        specialFront.next = this.first;
+        this.first = specialFront;
         // walk down list to start position
         Node curr = specialFront;
         for (int x = 0; x < start; x++) {
@@ -146,9 +174,15 @@ public class LinkedList<E> {
         startOfReplace.next = tempList.first;
         tempList.last.next = curr;
         if (tempList.last.next == null)
-            newList.last = tempList.last;
+            this.last = tempList.last;
         // get rid of specialFront
-        newList.first = newList.first.next;
+        this.first = this.first.next;
+    } 
+
+    // makes a copy of the list, replaces a subsection of that list, returns the new version
+    public LinkedList<E> replace(int start, int end, LinkedList<E> substitute) {
+        LinkedList<E> newList = copy(this);
+        newList.replaceInline(start, end, substitute);               
         return newList;
     }
 
