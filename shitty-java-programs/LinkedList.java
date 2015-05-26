@@ -17,6 +17,7 @@ LinkedList<E> copy()
 LinkedList<E> subsection(int start, int end)
 LinkedList<E> replace(int start, int end, LinkedList<E> substitute)
 LinkedList<E> replaceInline(int start, int end, LinkedList<E> substitute)
+String toString()
 */
 
 public class LinkedList<E> {
@@ -51,6 +52,19 @@ public class LinkedList<E> {
     public int length() {
         return length;
     }
+
+    public String toString() {
+        StringBuilder output = new StringBuilder();
+        output.append("[");
+        for (Node curr = first; curr != null; curr = curr.next) {
+            output.append(curr.data);
+            if (curr.next != null)
+                output.append(", ");
+        }
+        output.append("]");
+        return output.toString();
+    }
+
 
     // adds an item to the end of a list
     public void append(E item) {
